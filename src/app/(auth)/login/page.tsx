@@ -1,26 +1,55 @@
-// filepath: src/app/(auth)/login/page.tsx
-import { useState } from 'react';
-import axios from 'axios';
+"use client";
 
-export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+import { login } from "@/app/actions/auth";
+import Link from "next/link";
+import { useActionState } from "react";
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('/api/auth/login', { email, password });
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+export default function Login() {
+  const [state, formAction, pending] = useActionState(login, { message: "" });
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
-      <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
-      <button type="submit">Login</button>
+    <form action={formAction} className="p-8 bg-white w-[320px] rounded-md shadow-md flex flex-col gap-8">
+      <h1 className="text-3xl">Login</h1>
+
+      {state.message && (
+        <div className="text-red-500 tex-sm mt-2 bg-red-50 p-2 rounded">{state.message}</div>
+      )}
+
+      <div>
+        <label htmlFor="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          className="w-full border border-gray-300 rounded-md p-2"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          className="w-full border border-gray-300 rounded-md p-2"
+        />
+      </div>
+
+      <div>
+        <button
+          disabled={pending}
+          className="w-full bg-blue-500 text-white rounded-md p-2 mt-4"
+        >
+          Login
+        </button>
+      </div>
+
+      <div className="text-center">
+        Do not have account?{" "}
+        <Link href="/register" className="text-blue-500">
+          Register
+        </Link>
+      </div>
     </form>
   );
 }
