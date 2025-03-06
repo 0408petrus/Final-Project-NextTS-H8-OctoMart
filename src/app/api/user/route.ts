@@ -1,8 +1,8 @@
 import { db } from "@/app/db/mongo";
 import { getSession } from "@/app/lib/session"; // Assuming you have a session management utility
 
-export async function GET(req: Request) {
-  const session = await getSession(req);
+export async function GET() {
+  const session = await getSession();
   if (!session || !session.user) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
   }

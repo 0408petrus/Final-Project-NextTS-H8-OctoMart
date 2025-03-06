@@ -39,21 +39,6 @@ export default function CartPage() {
     localStorage.setItem('cart', JSON.stringify(updatedCartItems));
   };
 
-  // Gabungkan item yang sama di keranjang belanjaan
-  const addToCart = (newItem: CartItem) => {
-    const existingItem = cartItems.find(item => item.id === newItem.id);
-    let updatedCartItems;
-    if (existingItem) {
-      updatedCartItems = cartItems.map(item =>
-        item.id === newItem.id ? { ...item, quantity: item.quantity + newItem.quantity } : item
-      );
-    } else {
-      updatedCartItems = [...cartItems, newItem];
-    }
-    setCartItems(updatedCartItems);
-    localStorage.setItem('cart', JSON.stringify(updatedCartItems));
-  };
-
   const handleBuy = async () => {
     try {
       const res = await fetch(`/api/cart/buy`, {

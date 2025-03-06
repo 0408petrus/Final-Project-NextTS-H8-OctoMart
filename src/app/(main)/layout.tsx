@@ -11,12 +11,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [searchQuery, setSearchQuery] = useState("");
   const [userName, setUserName] = useState("Guest");
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
+  // const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSearchQuery(e.target.value);
+  // };
 
   const router = useRouter();
 
@@ -40,9 +39,6 @@ export default function RootLayout({
     fetchUser();
   }, []);
 
-  useEffect(() => {
-    console.log('RootLayout searchQuery:', searchQuery);
-  }, [searchQuery]);
 
   return (
     <>

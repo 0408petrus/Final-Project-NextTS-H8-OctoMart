@@ -10,7 +10,7 @@ import RootLayout from "@/app/(main)/layout";
 export default function ProductDetailPage() {
   const [product, setProduct] = useState<IProduct | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
-  const { id } = useParams();
+  const { id } = useParams() as { id: string };
   const router = useRouter();
 
   useEffect(() => {
