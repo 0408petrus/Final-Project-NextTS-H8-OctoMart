@@ -9,7 +9,7 @@ import RootLayout from "@/app/(main)/layout";
 
 export default function ProductDetailPage() {
   const [product, setProduct] = useState<IProduct | null>(null);
-  const [isInCart, setIsInCart] = useState<boolean>(false);
+  const [quantity, setQuantity] = useState<number>(1);
   const { id } = useParams();
   const router = useRouter();
 
@@ -31,39 +31,32 @@ export default function ProductDetailPage() {
     }
   }, [id]);
 
-  useEffect(() => {
-    if (id) {
-      async function checkCart() {
-        try {
-          const res = await fetch(`/api/cart/${id}`);
-          if (!res.ok) {
-            throw new Error('Failed to check cart');
-          }
-          const result = await res.json();
-          setIsInCart(result.isInCart);
-        } catch (error) {
-          console.error('Error checking cart:', error);
-        }
-      }
-      checkCart();
-    }
-  }, [id]);
+  const handleIncrement = () => {
+    setQuantity(prevQuantity => prevQuantity + 1);
+  };
+
+  const handleDecrement = () => {
+    setQuantity(prevQuantity => (prevQuantity > 1 ? prevQuantity - 1 : 1));
+  };
 
   const handleAddToCart = async () => {
     try {
-      const res = await fetch(`/api/cart`, {
-        method: 'POST',
+      const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
+      const updatedCartItems = [...cartItems, { ...product, quantity }];
+      localStorage.setItem('cart', JSON.stringify(updatedCartItems));
+
+      // Update the stock count in the database
+      await fetch(`/api/products/${product?.id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ productId: id }),
+        body: JSON.stringify({ rating: { count: product!.rating.count - quantity } }),
       });
-      if (!res.ok) {
-        throw new Error('Failed to add to cart');
-      }
-      setIsInCart(true);
+
+      alert('Product added to cart');
     } catch (error) {
-      console.error('Error adding to cart:', error);
+      console.error('Error adding product to cart:', error);
     }
   };
 
@@ -76,7 +69,7 @@ export default function ProductDetailPage() {
       <div className="container mx-auto p-4">
         <button
           onClick={() => router.push('/')}
-          className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+          className="mb-4 px-4 py-2 bg-red-800 text-white rounded hover:bg-slate-800 ease-in-out transition duration-300"
         >
           Back to Home
         </button>
@@ -89,12 +82,26 @@ export default function ProductDetailPage() {
             <p className="mb-2">{product.description}</p>
             <p className="mb-2"> {product.category}</p>
             <p className="mb-2">Atur Jumlah</p>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleDecrement}
+                className="bg-gray-300 text-gray-700 px-2 py-1 rounded"
+              >
+                -
+              </button>
+              <span>{quantity}</span>
+              <button
+                onClick={handleIncrement}
+                className="bg-gray-300 text-gray-700 px-2 py-1 rounded"
+              >
+                +
+              </button>
+            </div>
             <button
               onClick={handleAddToCart}
-              className={`mt-4 px-4 py-2 rounded ${isInCart ? 'bg-gray-500' : 'bg-blue-500'} text-white`}
-              disabled={isInCart}
+              className="mt-4 px-4 py-2 bg-red-800 text-white rounded"
             >
-              {isInCart ? 'Already in Cart' : 'Add to Cart'}
+              Add to Cart
             </button>
           </div>
         </div>

@@ -80,9 +80,9 @@ export default function Home() {
             <div>
               <button
               onClick={() => handleViewDetails(product.id)}
-              className="bg-red-800 text-white px-4 py-2 rounded-lg mt-2"
+              className="bg-red-800 text-white px-4 py-2 rounded-lg mt-2 hover:bg-slate-500 ease-in-out transition duration-300"
               >
-              View Details
+              View Products
               </button>
               {/* <button
               onClick={() => handleViewDetails(product.id)}
