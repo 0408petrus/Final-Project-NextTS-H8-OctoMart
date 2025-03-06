@@ -8,15 +8,15 @@ export default function Login() {
   const [state, formAction, pending] = useActionState(login, { message: "" });
 
   return (
-    <form action={formAction} className="p-8 bg-white w-[320px] rounded-md shadow-md flex flex-col gap-8">
-      <h1 className="text-3xl">Login</h1>
+    <form action={formAction} className="p-8 bg-white w-[320px] rounded-lg shadow-lg flex flex-col gap-8">
+      <h1 className="text-3xl font-bold text-center text-red-800">Login</h1>
 
       {state.message && (
-        <div className="text-red-500 tex-sm mt-2 bg-red-50 p-2 rounded">{state.message}</div>
+        <div className="text-red-500 text-sm mt-2 bg-red-50 p-2 rounded">{state.message}</div>
       )}
 
       <div>
-        <label htmlFor="email">Email</label>
+        <label htmlFor="email" className="block mb-2 text-black">Email</label>
         <input
           type="email"
           id="email"
@@ -26,7 +26,7 @@ export default function Login() {
       </div>
 
       <div>
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password" className="block mb-2 text-black">Password</label>
         <input
           type="password"
           id="password"
@@ -38,7 +38,7 @@ export default function Login() {
       <div>
         <button
           disabled={pending}
-          className="w-full bg-blue-500 text-white rounded-md p-2 mt-4"
+          className="w-full bg-red-800 text-white rounded-md p-2 mt-4"
         >
           Login
         </button>
@@ -46,7 +46,7 @@ export default function Login() {
 
       <div className="text-center">
         Do not have account?{" "}
-        <Link href="/register" className="text-blue-500">
+        <Link href="/register" className="text-red-800">
           Register
         </Link>
       </div>
